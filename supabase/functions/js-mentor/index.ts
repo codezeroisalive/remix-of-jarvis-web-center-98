@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
     const history: Array<{ role: string; content: string }> = body.messages ?? [];
 
     const messages = [
-      { role: "system", content: BASE_PERSONA },
+      { role: "system", content: mode.startsWith("code") ? BASE_PERSONA + CODE_PERSONA : BASE_PERSONA },
       ...history.slice(-12).map((m) => ({ role: m.role, content: m.content })),
       { role: "user", content: prompt(mode, payload) },
     ];
