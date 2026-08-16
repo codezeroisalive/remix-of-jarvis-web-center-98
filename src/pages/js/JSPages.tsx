@@ -5,6 +5,7 @@ import { streamMentor, loadDoc, saveDoc, MentorMode } from "@/lib/jscenter/mento
 import { getProject, PROJECTS } from "@/lib/jscenter/projects";
 import { CLASS_LABELS, DIFFICULTY_META } from "@/lib/jscenter/types";
 import { useJSProfile } from "@/hooks/useJSProfile";
+import { CodeGenPanel } from "./JSCodeLab";
 import { supabase } from "@/integrations/supabase/client";
 import { Star, RefreshCw, Hammer, Mic2, Wallet, Ruler, Beaker, BookOpen, BarChart3, Trash2 } from "lucide-react";
 
@@ -77,6 +78,7 @@ const SectionView: React.FC<{
 const TABS: Array<{ key: MentorMode; label: string }> = [
   { key: "detail", label: "Workspace" },
   { key: "build", label: "Build Mode" },
+  { key: "code", label: "💻 Code" },
   { key: "model", label: "Model Design" },
   { key: "budget", label: "Budget" },
   { key: "experiment", label: "Experiment" },
@@ -145,6 +147,9 @@ export function JSProjectDetail() {
         ))}
       </div>
 
+      {tab === "code" ? (
+        <CodeGenPanel projectId={project.id} />
+      ) : (
       <SectionView
         key={tab}
         title={TABS.find((t) => t.key === tab)!.label}
@@ -153,6 +158,7 @@ export function JSProjectDetail() {
         mode={tab}
         cta="Generate"
       />
+      )}
       <p className="text-[11px] text-muted-foreground/70 pb-6">
         Costs are estimates. Any result shown is an expected result — it must be experimentally verified by you.
       </p>
