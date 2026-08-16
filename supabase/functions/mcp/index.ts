@@ -102,7 +102,7 @@ var update_my_profile_default = defineTool3({
 });
 
 // src/lib/mcp/index.ts
-var projectRef = "uswgppmnvxgjptzgqsoq";
+var projectRef = "yhburasglowbyzliuhcx";
 var mcp_default = defineMcp({
   name: "jarvis-mcp",
   title: "JARVIS",
