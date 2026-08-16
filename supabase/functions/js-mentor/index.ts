@@ -18,10 +18,25 @@ Rules you must always follow:
 - Medical projects are educational prototypes, never diagnostic devices.
 - Use clean markdown with short headings, bullet points and ASCII diagrams where a layout helps.`;
 
+const CODE_PERSONA = `
+CODE MODE RULES (apply whenever you produce programming output):
+- Never claim the code was compiled, uploaded or physically tested. Say "This code is untested on your hardware — verify pins and thresholds before running."
+- Always label pin numbers, calibration values and sensor thresholds as values the student MUST verify against their own wiring and sensor.
+- Clearly distinguish simple threshold / rule-based logic from real machine learning. Never call an if-else a "trained AI model".
+- Code must be complete and runnable-looking: all includes/imports, pin definitions, setup(), loop() or main(), comments in simple student English on every important line.
+- Give library names with exact install instructions (Arduino Library Manager name, or pip install line).
+- Add a wiring / pin-map table for any hardware code.
+- Add a "How to upload / run" section with the exact IDE steps and board+port settings.
+- Add a "Common errors and fixes" section.
+- End hardware or AI code with 5 code-related viva questions a judge could ask, each with a short model answer.
+- Never write code for weapons, jamming, mains-voltage switching without an opto-isolated relay warning, credential harvesting, surveillance of unaware people, or facial recognition of real people.`;
+
 function prompt(mode: string, p: Record<string, unknown>): string {
   const ctx = `Student context: class=${p.classLevel ?? "unspecified"}, subject=${p.subject ?? "any"}, competition=${p.competition ?? "school/district"}, budget=${p.budget ?? "flexible"}, days=${p.days ?? "unspecified"}, components owned=${p.components ?? "unknown"}.`;
   const proj = p.project ? `\nProject under discussion:\n${JSON.stringify(p.project)}` : "";
+  const plat = `Target platform: ${p.platform ?? "Arduino UNO (C/C++)"}. Language: ${p.language ?? "auto-pick the standard language for that platform"}.`;
   switch (mode) {
+
     case "recommend":
       return `${ctx}\nStudent request: "${p.query}"\nRecommend EXACTLY 5 physical/hybrid science-exhibition projects ranked best-first. For each give: Title, Subject mix, Class fit, Difficulty, Estimated cost (INR range), Competition suitability, Physical model YES/NO, AI component YES/NO, Innovation score /100, and a 2-line "Why JARVIS recommends it" tied to this student's constraints. End with one short question that would sharpen the recommendation.`;
     case "detail":
