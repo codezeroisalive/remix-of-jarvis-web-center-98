@@ -99,6 +99,7 @@ function App() {
                     <Route path="judge" element={<JSJudge />} />
                     <Route path="budget" element={<JSBudget />} />
                     <Route path="designer" element={<JSDesigner />} />
+                    <Route path="code" element={<JSCodeLab />} />
                     <Route path="data" element={<JSDataLab />} />
                     <Route path="saved" element={<JSSaved />} />
                   </Route>

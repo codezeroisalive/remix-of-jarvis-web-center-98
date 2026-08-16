@@ -5,6 +5,7 @@ import { streamMentor, loadDoc, saveDoc, MentorMode } from "@/lib/jscenter/mento
 import { getProject, PROJECTS } from "@/lib/jscenter/projects";
 import { CLASS_LABELS, DIFFICULTY_META } from "@/lib/jscenter/types";
 import { useJSProfile } from "@/hooks/useJSProfile";
+import { CodeGenPanel } from "./JSCodeLab";
 import { supabase } from "@/integrations/supabase/client";
 import { Star, RefreshCw, Hammer, Mic2, Wallet, Ruler, Beaker, BookOpen, BarChart3, Trash2 } from "lucide-react";
 
@@ -77,6 +78,7 @@ const SectionView: React.FC<{
 const TABS: Array<{ key: MentorMode; label: string }> = [
   { key: "detail", label: "Workspace" },
   { key: "build", label: "Build Mode" },
+  { key: "code", label: "💻 Code" },
   { key: "model", label: "Model Design" },
   { key: "budget", label: "Budget" },
   { key: "experiment", label: "Experiment" },
@@ -106,7 +108,7 @@ export function JSProjectDetail() {
       setSaved(false);
     } else {
       await supabase.from("js_saved_projects").insert([{
-        user_id: u.user.id, project_id: project.id, title: project.title, meta: project as unknown as Record<string, unknown>,
+        user_id: u.user.id, project_id: project.id, title: project.title, meta: project as unknown as never,
       }]);
       setSaved(true);
     }
@@ -145,6 +147,9 @@ export function JSProjectDetail() {
         ))}
       </div>
 
+      {tab === "code" ? (
+        <CodeGenPanel projectId={project.id} />
+      ) : (
       <SectionView
         key={tab}
         title={TABS.find((t) => t.key === tab)!.label}
@@ -153,6 +158,7 @@ export function JSProjectDetail() {
         mode={tab}
         cta="Generate"
       />
+      )}
       <p className="text-[11px] text-muted-foreground/70 pb-6">
         Costs are estimates. Any result shown is an expected result — it must be experimentally verified by you.
       </p>
@@ -280,7 +286,7 @@ export function JSDataLab() {
     if (!u.user) { setStatus("Sign in to save experiments."); return; }
     const { error } = await supabase.from("js_experiments").insert([{
       user_id: u.user.id, title: title || "Untitled experiment",
-      independent_var: iv, dependent_var: dv, rows: rows as unknown as Record<string, unknown>[],
+      independent_var: iv, dependent_var: dv, rows: rows as unknown as never,
     }]);
     setStatus(error ? error.message : "Experiment data saved.");
   };

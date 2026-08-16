@@ -18,10 +18,25 @@ Rules you must always follow:
 - Medical projects are educational prototypes, never diagnostic devices.
 - Use clean markdown with short headings, bullet points and ASCII diagrams where a layout helps.`;
 
+const CODE_PERSONA = `
+CODE MODE RULES (apply whenever you produce programming output):
+- Never claim the code was compiled, uploaded or physically tested. Say "This code is untested on your hardware — verify pins and thresholds before running."
+- Always label pin numbers, calibration values and sensor thresholds as values the student MUST verify against their own wiring and sensor.
+- Clearly distinguish simple threshold / rule-based logic from real machine learning. Never call an if-else a "trained AI model".
+- Code must be complete and runnable-looking: all includes/imports, pin definitions, setup(), loop() or main(), comments in simple student English on every important line.
+- Give library names with exact install instructions (Arduino Library Manager name, or pip install line).
+- Add a wiring / pin-map table for any hardware code.
+- Add a "How to upload / run" section with the exact IDE steps and board+port settings.
+- Add a "Common errors and fixes" section.
+- End hardware or AI code with 5 code-related viva questions a judge could ask, each with a short model answer.
+- Never write code for weapons, jamming, mains-voltage switching without an opto-isolated relay warning, credential harvesting, surveillance of unaware people, or facial recognition of real people.`;
+
 function prompt(mode: string, p: Record<string, unknown>): string {
   const ctx = `Student context: class=${p.classLevel ?? "unspecified"}, subject=${p.subject ?? "any"}, competition=${p.competition ?? "school/district"}, budget=${p.budget ?? "flexible"}, days=${p.days ?? "unspecified"}, components owned=${p.components ?? "unknown"}.`;
   const proj = p.project ? `\nProject under discussion:\n${JSON.stringify(p.project)}` : "";
+  const plat = `Target platform: ${p.platform ?? "Arduino UNO (C/C++)"}. Language: ${p.language ?? "auto-pick the standard language for that platform"}.`;
   switch (mode) {
+
     case "recommend":
       return `${ctx}\nStudent request: "${p.query}"\nRecommend EXACTLY 5 physical/hybrid science-exhibition projects ranked best-first. For each give: Title, Subject mix, Class fit, Difficulty, Estimated cost (INR range), Competition suitability, Physical model YES/NO, AI component YES/NO, Innovation score /100, and a 2-line "Why JARVIS recommends it" tied to this student's constraints. End with one short question that would sharpen the recommendation.`;
     case "detail":
@@ -34,8 +49,28 @@ Problem statement, Scientific principle, AI component, Objectives, Hypothesis, R
     case "judge-eval":
       return `${ctx}${proj}\nYou are simulating a science-fair judge. Question asked: "${p.question}". Student answer: "${p.answer}".
 Reply with: Score /10, What was good, What was missing, A model answer at this student's level (max 120 words), and the next question you would ask.`;
+    case "code":
+      return `${ctx}${proj}\n${plat}\nExtra requirements from the student: ${p.feature ?? "standard project behaviour"}.\nGENERATE CODE for this project. Sections in order:
+1. What this code does (5 bullets)
+2. Hardware / software requirements (exact library names + install steps)
+3. Wiring & pin map table (Component | Board pin | Notes — mark every pin as "verify on your board")
+4. THE FULL CODE in one fenced code block, complete, with student-level comments on every important line
+5. Configuration values you must tune (thresholds, calibration, WiFi/serial settings)
+6. How to upload / run (exact IDE or terminal steps, board + port settings)
+7. Testing steps with expected serial output
+8. Common errors and fixes
+9. 5 code viva questions with model answers`;
+    case "code-explain":
+      return `${ctx}${proj}\n${plat}\nTEACH ME THIS CODE. Code:\n\`\`\`\n${p.code ?? ""}\n\`\`\`\nExplain in student language at this class level: what the program does overall, then a block-by-block walkthrough (quote the lines, then explain), every function and library used, the flow of data from sensor to output, which parts are simple threshold logic vs real machine learning, and 5 things the student must be able to say about this code in a viva.`;
+    case "code-debug":
+      return `${ctx}${proj}\n${plat}\nDEBUG MY CODE. Student's code:\n\`\`\`\n${p.code ?? ""}\n\`\`\`\nError / wrong behaviour reported: "${p.errorText ?? "not described"}".\nReply with: Most likely cause, Other possible causes, The corrected full code in one fenced block, exactly what you changed and why, and how to verify the fix on the hardware.`;
+    case "code-viva":
+      return `${ctx}${proj}\n${plat}\nCODE VIVA. Based on this code:\n\`\`\`\n${p.code ?? ""}\n\`\`\`\nGive 12 questions a judge could ask about the SOFTWARE (logic, libraries, pins, timing, thresholds, accuracy, failure handling, why this algorithm, how you'd improve it) with a short model answer for each at this class level.`;
+    case "code-hardware":
+      return `${ctx}${proj}\n${plat}\nHARDWARE BUILD MODE. Give: full component list with the exact module names to buy, a wiring table (module pin → board pin), an ASCII wiring diagram, power supply plan with current budget and safety warnings, assembly order, calibration procedure for each sensor, a bring-up checklist (test each module alone before combining), and a troubleshooting table for "nothing happens / wrong readings / board resets".`;
     case "explain":
       return `${ctx}\nExplain "${p.topic}" for a student in ${p.classLevel ?? "Class 10"}. Structure: Simple explanation, Detailed explanation, Formulae (if any), Examples, Practical demonstration you can do at home/school, Common mistakes, Real-world applications, Related project ideas, Competition project opportunities.`;
+
     case "presentation":
       return `${ctx}${proj}\nWrite "EXPLAIN MY PROJECT" scripts in natural spoken student language, not academic language: a 30-second version, 1-minute, 3-minute, and a 5-minute competition presentation with stage directions for the physical model demo.`;
     case "budget":
@@ -64,7 +99,7 @@ Deno.serve(async (req) => {
     const history: Array<{ role: string; content: string }> = body.messages ?? [];
 
     const messages = [
-      { role: "system", content: BASE_PERSONA },
+      { role: "system", content: mode.startsWith("code") ? BASE_PERSONA + CODE_PERSONA : BASE_PERSONA },
       ...history.slice(-12).map((m) => ({ role: m.role, content: m.content })),
       { role: "user", content: prompt(mode, payload) },
     ];
