@@ -4,7 +4,8 @@ const FN_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/js-mentor`;
 
 export type MentorMode =
   | "chat" | "recommend" | "detail" | "build" | "judge" | "judge-eval"
-  | "explain" | "presentation" | "budget" | "model" | "experiment";
+  | "explain" | "presentation" | "budget" | "model" | "experiment"
+  | "code" | "code-explain" | "code-debug" | "code-viva" | "code-hardware";
 
 export interface MentorContext {
   classLevel?: string;
@@ -18,6 +19,11 @@ export interface MentorContext {
   topic?: string;
   question?: string;
   answer?: string;
+  platform?: string;
+  language?: string;
+  feature?: string;
+  code?: string;
+  errorText?: string;
 }
 
 /** Streams JARVIS output. Calls onDelta with each text chunk. */
