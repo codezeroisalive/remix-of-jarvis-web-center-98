@@ -4,6 +4,7 @@ import { streamMentor, loadDoc, saveDoc, MentorMode } from "@/lib/jscenter/mento
 import { getProject, PROJECTS } from "@/lib/jscenter/projects";
 import { ScienceProject, CLASS_LABELS } from "@/lib/jscenter/types";
 import { useJSProfile } from "@/hooks/useJSProfile";
+import { PlatformReference } from "@/components/jscenter/KnowledgeRef";
 import { Code2, Copy, Check, Cpu, GraduationCap, Bug, Mic2, RefreshCw } from "lucide-react";
 
 /* ---------------- platforms ---------------- */
@@ -188,6 +189,8 @@ export const CodeGenPanel: React.FC<{ projectId?: string }> = ({ projectId }) =>
           )}
         </div>
       </Panel>
+
+      <PlatformReference platformId={platform} />
 
       {error && <Panel className="border-destructive/50"><p className="text-sm text-destructive">{error}</p></Panel>}
 

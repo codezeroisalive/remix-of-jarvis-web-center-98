@@ -42,6 +42,7 @@ import JSLayout from "./pages/js/JSLayout";
 import JSHome from "./pages/js/JSHome";
 import JSProjectLab from "./pages/js/JSProjectLab";
 import JSCodeLab from "./pages/js/JSCodeLab";
+import JSLibrary from "./pages/js/JSLibrary";
 import { JSProjectDetail, JSBuild, JSBudget, JSDesigner, JSExperiment, JSKnowledge, JSJudge, JSDataLab, JSSaved } from "./pages/js/JSPages";
 
 
@@ -101,6 +102,7 @@ function App() {
                     <Route path="budget" element={<JSBudget />} />
                     <Route path="designer" element={<JSDesigner />} />
                     <Route path="code" element={<JSCodeLab />} />
+                    <Route path="library" element={<JSLibrary />} />
                     <Route path="data" element={<JSDataLab />} />
                     <Route path="saved" element={<JSSaved />} />
                   </Route>

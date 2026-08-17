@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   Brain, FlaskConical, BookOpen, Hammer, Beaker, Mic2, Wallet,
-  Ruler, BarChart3, Star, Menu, X, ArrowLeft, GraduationCap, Code2,
+  Ruler, BarChart3, Star, Menu, X, ArrowLeft, GraduationCap, Code2, Library,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +10,7 @@ const NAV = [
   { to: "/js-center", end: true, label: "JARVIS Chat", icon: Brain },
   { to: "/js-center/lab", label: "Project Lab", icon: FlaskConical },
   { to: "/js-center/knowledge", label: "Knowledge", icon: BookOpen },
+  { to: "/js-center/library", label: "Knowledge Library", icon: Library },
   { to: "/js-center/build", label: "Build Mode", icon: Hammer },
   { to: "/js-center/code", label: "Code Lab", icon: Code2 },
   { to: "/js-center/experiment", label: "Experiment Lab", icon: Beaker },
