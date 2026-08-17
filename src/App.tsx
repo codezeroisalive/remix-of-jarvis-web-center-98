@@ -41,6 +41,7 @@ import SecuritySettings from "./pages/security/Settings";
 import JSLayout from "./pages/js/JSLayout";
 import JSHome from "./pages/js/JSHome";
 import JSProjectLab from "./pages/js/JSProjectLab";
+import JSCodeLab from "./pages/js/JSCodeLab";
 import { JSProjectDetail, JSBuild, JSBudget, JSDesigner, JSExperiment, JSKnowledge, JSJudge, JSDataLab, JSSaved } from "./pages/js/JSPages";
 
 
